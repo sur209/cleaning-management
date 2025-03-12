@@ -23,4 +23,9 @@ public class SignService {
         this.signRepository.removeCleaningSignUpFromDB(reservationID);
         return true;
     }
+
+    public boolean removeSignUpForApartmentDelivery(Integer reservationID) {
+        this.signRepository.removeApartmentDeliveryFromDB(reservationID);
+        return true;
+    }
 }

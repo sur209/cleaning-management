@@ -52,14 +52,14 @@ public class SignRepository {
         }
     }
 
-    public void addApartmentDeliveryToDB(String apartmentDelivery, Integer reservationID) {
+    public void addApartmentDeliveryToDB(String deliveryPerson, Integer reservationID) {
         // Falta modificar desce aca para abajo
-        String sql = "UPDATE reservation SET apartment_delivery = ? WHERE ID = ?";
+        String sql = "UPDATE reservation SET delivery_person = ? WHERE ID = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, apartmentDelivery);
+            pstmt.setString(1, deliveryPerson);
             pstmt.setInt(2, reservationID);
 
             pstmt.executeUpdate();
@@ -71,7 +71,7 @@ public class SignRepository {
 
     public void removeApartmentDeliveryFromDB(Integer reservationID) {
         // Falta modificar desce aca para abajo
-        String sql = "UPDATE reservation SET apartment_delivery = NULL WHERE ID = ?";
+        String sql = "UPDATE reservation SET delivery_person = NULL WHERE ID = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
