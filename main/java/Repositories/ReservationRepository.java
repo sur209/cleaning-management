@@ -51,7 +51,7 @@ public class ReservationRepository {
         ArrayList<ReservationModel> listaReservas = new ArrayList<>();
         final String nombreDeptoFinal = apartmentName;
 
-        String sql = "SELECT id, department, start_date, end_date, cleaner FROM reservation WHERE department = ?";
+        String sql = "SELECT id, department, start_date, end_date, cleaner, delivery_person FROM reservation WHERE department = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -60,20 +60,24 @@ public class ReservationRepository {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    String limpiador = "test";
+                    String cleaner = "";
+                    String deliveryPerson = "";
                     int id = rs.getInt("id");
                     String departmentName = rs.getString("department");
                     LocalDate startDate = rs.getDate("start_date").toLocalDate();
                     LocalDate endDate = rs.getDate("end_date").toLocalDate();
 
                     if (rs.getString("cleaner") != null) {
-                        limpiador = rs.getString("cleaner");
+                        cleaner = rs.getString("cleaner");
                     }
-
+                    if (rs.getString("delivery_person") != null) {
+                        deliveryPerson = rs.getString("delivery_person");
+                    }
 
                     ReservationModel reserva = new ReservationModel(departmentName, startDate, endDate, "clientTest", 3);
                     reserva.setID(id);
-                    reserva.setLimpiador(limpiador);
+                    reserva.setLimpiador(cleaner);
+                    reserva.setEntregador(deliveryPerson);
                     listaReservas.add(reserva);
                     System.out.println(reserva.getDepartment());
                 }
