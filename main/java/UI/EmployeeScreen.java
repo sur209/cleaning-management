@@ -35,33 +35,38 @@ public class EmployeeScreen {
         ArrayList<ApartmentModel> apartmentList = new ApartmentService().getApartments();
         apartmentComboBox.setItems(FXCollections.observableArrayList(apartmentList));
 
-        Button continueButton = new Button("Continuar");
-
         Label selectReservationLabel = new Label("Seleccione una reserva:");
         ComboBox<ReservationModel> reservationsComboBox = new ComboBox<>();
 
         Button anotarseLimpieza = new Button("Anotarse a limpieza");
         anotarseLimpieza.setVisible(false);
         Label anotadoLimpiador = new Label("Anotado como limpiador: ");
+        anotadoLimpiador.setVisible(false);
         Button anotarseEntrega = new Button("Anotarse a entrega");
         anotarseEntrega.setVisible(false);
         Label anotadoEntregador = new Label("Anotado como entregador: ");
+        anotadoEntregador.setVisible(false);
 
-        Button removerLimpiador = new Button("Remover limpiador");
+        Button removerLimpiador = new Button("Desanotarse de la limpieza");
         removerLimpiador.setVisible(false);
-        Button removerEntregador = new Button("Remover entregador");
+        Button removerEntregador = new Button("Desanotarse de la entrega");
         removerEntregador.setVisible(false);
 
         volverAtras.setOnAction(e -> {
             primaryStage.setScene(new MainScreen(primaryStage).getMainScreen());
         });
 
-        // Continue Button of Department
-        continueButton.setOnAction(e -> {
+        apartmentComboBox.setOnAction(e -> {
             if (apartmentComboBox.getValue() != null) {
                 String apartmentName = apartmentComboBox.getValue().getName();
                 ArrayList<ReservationModel> retrieve = new ReservationService().getReservations(apartmentName);
                 reservationsComboBox.setItems(FXCollections.observableArrayList(retrieve));
+                anotadoLimpiador.setVisible(false);
+                anotadoEntregador.setVisible(false);
+                anotarseLimpieza.setVisible(false);
+                anotarseEntrega.setVisible(false);
+                removerLimpiador.setVisible(false);
+                removerEntregador.setVisible(false);
             } else {
                 System.out.println("Por favor, seleccione un departamento.");
             }
@@ -69,12 +74,26 @@ public class EmployeeScreen {
 
         reservationsComboBox.setOnAction(e -> {
             ReservationModel selectedReservation = reservationsComboBox.getValue();
-            anotarseLimpieza.setVisible(true);
-            anotarseEntrega.setVisible(true);
-            removerLimpiador.setVisible(true);
-            removerEntregador.setVisible(true);
-            anotadoLimpiador.setText("Anotado como limpiador: " + selectedReservation.getLimpiador());
-            anotadoEntregador.setText("Anotado como entregador: " + selectedReservation.getEntregador());
+            anotadoLimpiador.setVisible(true);
+            anotadoEntregador.setVisible(true);
+            if (!employee.getUserName().equals(selectedReservation.getLimpiador())) {
+                anotarseLimpieza.setVisible(true);
+                removerLimpiador.setVisible(false);
+            } else {
+                removerLimpiador.setVisible(true);
+                anotarseLimpieza.setVisible(false);
+            }
+
+            if (!employee.getUserName().equals(selectedReservation.getEntregador())) {
+                anotarseEntrega.setVisible(true);
+                removerEntregador.setVisible(false);
+            } else {
+                removerEntregador.setVisible(true);
+                anotarseEntrega.setVisible(false);
+            }
+
+            anotadoLimpiador.setText("Anotado como limpiador para la proxima reserva: " + selectedReservation.getLimpiador());
+            anotadoEntregador.setText("Anotado como entregador para la proxima reserva: " + selectedReservation.getEntregador());
         });
 
         anotarseLimpieza.setOnAction(e -> {
@@ -82,6 +101,10 @@ public class EmployeeScreen {
             Integer reservationID = selectedReservation.getID();
             SignService signService = new SignService();
             signService.signUpForCleaning(employee.getUserName(), reservationID);
+            anotadoLimpiador.setText("Anotado como limpiador: " + employee.getUserName());
+
+            anotarseLimpieza.setVisible(false);
+            removerLimpiador.setVisible(true);
         });
 
         removerLimpiador.setOnAction( e -> {
@@ -89,6 +112,10 @@ public class EmployeeScreen {
            Integer reservationID = selectedReservation.getID();
            SignService signService = new SignService();
            signService.removeSignUpForCleaning(reservationID);
+           anotadoLimpiador.setText("Anotado como limpiador: ");
+
+           anotarseLimpieza.setVisible(true);
+           removerLimpiador.setVisible(false);
         });
 
         anotarseEntrega.setOnAction(e -> {
@@ -96,6 +123,10 @@ public class EmployeeScreen {
             Integer reservationID = selectedReservation.getID();
             SignService signService = new SignService();
             signService.signUpForApartmentDelivery(employee.getUserName(), reservationID);
+            anotadoEntregador.setText("Anotado como entregador: " + employee.getUserName());
+
+            anotarseEntrega.setVisible(false);
+            removerEntregador.setVisible(true);
         });
 
         removerEntregador.setOnAction( e -> {
@@ -103,10 +134,14 @@ public class EmployeeScreen {
             Integer reservationID = selectedReservation.getID();
             SignService signService = new SignService();
             signService.removeSignUpForApartmentDelivery(reservationID);
+            anotadoEntregador.setText("Anotado como entregador: ");
+
+            anotarseEntrega.setVisible(true);
+            removerEntregador.setVisible(false);
         });
 
         employeeLayout.getChildren().addAll(volverAtras, employeeName, selectApartmentLabel,
-                apartmentComboBox, continueButton, reservationsComboBox, anotarseLimpieza, anotarseEntrega,
+                apartmentComboBox, selectReservationLabel, reservationsComboBox, anotarseLimpieza, anotarseEntrega,
                 anotadoLimpiador, anotadoEntregador, removerLimpiador, removerEntregador);
         return new Scene(employeeLayout, 400, 600);
     }
