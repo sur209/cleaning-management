@@ -2,6 +2,7 @@ package UI;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 
@@ -19,6 +20,7 @@ public class OwnerScreen {
         Button volverAtras = new Button("Volver atras");
         Button apartmentAdmin = new Button("Gestion de departamentos");
         Button userAdmin = new Button("Gestion de usuarios");
+
 
         volverAtras.setOnAction(e -> {
             primaryStage.setScene(new MainScreen(primaryStage).getMainScreen());
