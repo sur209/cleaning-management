@@ -36,7 +36,7 @@ public class EmployeeSelectionScreen {
 
         login.setOnAction(e -> {
             if (usersList.getValue() != null) {
-                primaryStage.setScene(new EmployeeScreen(primaryStage).getEmployeeScreen());
+                primaryStage.setScene(new EmployeeScreen(primaryStage).getEmployeeScreen(usersList.getValue()));
             }
         });
 

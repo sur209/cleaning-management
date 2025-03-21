@@ -73,6 +73,13 @@ public class ReservationModel {
         return this.limpiador;
     }
 
+    public void setEntregador(String limpiador) {
+        this.entregador = entregador;
+    }
+
+    public String getEntregador() {
+        return this.entregador;
+    }
 
 
     public boolean conflictsWith(ReservationModel other) {

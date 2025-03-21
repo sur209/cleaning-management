@@ -75,7 +75,6 @@ public class ReservationRepository {
                         limpiador = rs.getString("cleaner");
                     }
 
-
                     ReservationModel reserva = new ReservationModel(departmentName, startDate, endDate, huesped, peopleNumber);
                     reserva.setID(id);
                     reserva.setLimpiador(limpiador);
