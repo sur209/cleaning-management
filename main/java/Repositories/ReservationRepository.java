@@ -62,7 +62,8 @@ public class ReservationRepository {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    String limpiador = "test";
+                    String cleaner = "";
+                    String deliveryPerson = "";
                     int id = rs.getInt("id");
                     String departmentName = rs.getString("department");
                     LocalDate startDate = rs.getDate("start_date").toLocalDate();
@@ -72,12 +73,16 @@ public class ReservationRepository {
 
 
                     if (rs.getString("cleaner") != null) {
-                        limpiador = rs.getString("cleaner");
+                        cleaner = rs.getString("cleaner");
                     }
-
+                    if (rs.getString("delivery_person") != null) {
+                        deliveryPerson = rs.getString("delivery_person");
+                    }
+                  
                     ReservationModel reserva = new ReservationModel(departmentName, startDate, endDate, huesped, peopleNumber);
                     reserva.setID(id);
-                    reserva.setLimpiador(limpiador);
+                    reserva.setLimpiador(cleaner);
+                    reserva.setEntregador(deliveryPerson);
                     listaReservas.add(reserva);
                     System.out.println(reserva.getDepartment());
                 }

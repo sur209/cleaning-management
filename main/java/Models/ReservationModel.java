@@ -73,7 +73,7 @@ public class ReservationModel {
         return this.limpiador;
     }
 
-    public void setEntregador(String limpiador) {
+    public void setEntregador(String entregador) {
         this.entregador = entregador;
     }
 
