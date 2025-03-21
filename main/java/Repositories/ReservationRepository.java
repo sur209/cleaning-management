@@ -27,7 +27,7 @@ public class ReservationRepository {
 
     public void addReservationToDB(ReservationModel reservation) {
 
-        String sql = "INSERT INTO reservation (department, start_date, end_date) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation (department, start_date, end_date, huesped, people_number) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -38,6 +38,8 @@ public class ReservationRepository {
             pstmt.setString(1, reservation.getDepartment());
             pstmt.setDate(2, sqlStartDate);
             pstmt.setDate(3, sqlEndDate);
+            pstmt.setString(4, reservation.getClientName());
+            pstmt.setInt(5, reservation.getPeopleNumber());
 
             pstmt.executeUpdate();
             System.out.println("Reservacion guardada con exito.");
@@ -51,7 +53,7 @@ public class ReservationRepository {
         ArrayList<ReservationModel> listaReservas = new ArrayList<>();
         final String nombreDeptoFinal = apartmentName;
 
-        String sql = "SELECT id, department, start_date, end_date, cleaner, delivery_person FROM reservation WHERE department = ?";
+        String sql = "SELECT id, department, start_date, end_date, cleaner, delivery_person, huesped, people_number FROM reservation WHERE department = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -66,6 +68,9 @@ public class ReservationRepository {
                     String departmentName = rs.getString("department");
                     LocalDate startDate = rs.getDate("start_date").toLocalDate();
                     LocalDate endDate = rs.getDate("end_date").toLocalDate();
+                    String huesped = rs.getString("huesped");
+                    int peopleNumber = rs.getInt("people_number");
+
 
                     if (rs.getString("cleaner") != null) {
                         cleaner = rs.getString("cleaner");
@@ -73,8 +78,8 @@ public class ReservationRepository {
                     if (rs.getString("delivery_person") != null) {
                         deliveryPerson = rs.getString("delivery_person");
                     }
-
-                    ReservationModel reserva = new ReservationModel(departmentName, startDate, endDate, "clientTest", 3);
+                  
+                    ReservationModel reserva = new ReservationModel(departmentName, startDate, endDate, huesped, peopleNumber);
                     reserva.setID(id);
                     reserva.setLimpiador(cleaner);
                     reserva.setEntregador(deliveryPerson);
